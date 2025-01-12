@@ -1,13 +1,14 @@
-""" SDFA_KL.py  *** work in progress ***
+"""SDFA_KLx.py
 
-implementing the exact amd approximate KL algorithms for stochastic
+implementing the approximate KL algorithm for stochastic
 deterministic finite acceptors (SDFAs), from Cortes&al'08, Mohri'02.
 
-Given SDFAs m1 and m2, kl(m1,m2) returns their relative entropy,
-sometimes called Kullback-Liebler (KL) divergence.
+Given SDFAs m1 and m2, klx(m1,m2) returns their relative entropy,
+sometimes called Kullback-Liebler (KL) divergence, up to a
+user set error threshold epsilon
 
 To run a simple example, type:
-  > python SDFA_KL.py
+  > python SDFA_KLx.py
 Other examples, displays of the relevant machines, etc can
 be uncommented. Set VERBOSE=true for lots of info.
 
@@ -17,15 +18,9 @@ of floating point numbers representing (probability,entropy).
 K also includes +infty,-infty, but here we just let infinite values
 raise exceptions.  The semiring zero is (0.,0.), and one is (1.,0.).
 
-The exact algorithm uses the Floyd-Warshall algorithm to calculate
-distances in two machines. Since these steps haves cubic time
-complexity in the number of states, they are only feasible for small
-machines.
-
-The more efficient approximate algorithm uses Bellman-Ford
-breadth-first queue updating to a threshold epsilon. Here Python
-deques implement queues: enqueue e with appendleft(e) and dequeue e
-from the right with pop().
+The approximate algorithm uses Bellman-Ford breadth-first queue
+updating to a threshold epsilon. Here Python deques implement queues:
+enqueue e with appendleft(e) and dequeue e from the right with pop().
 
 Cortes&al 2008.   https://cs.nyu.edu/~mohri/pub/nkl.pdf
                   https://doi.org/10.1142/s0129054108005644
@@ -145,15 +140,6 @@ def ktimes(w1,w2):
   (x2,y2) = w2
   return ( x1*x2, (x1*y2) + (x2*y1) )
 
-def kstar(w):
-  """ for cycles with weight w, i.e. paths from some state back to itself
-  """
-  (x,y) = w
-  if x != 1:                 # should we require abs(x) < 1 ?
-    return ( ( 1/(1-x), y/((1-x)**2) ) )
-  else:
-    raise RuntimeError('kstar: divide by 0 error with w = %s' % str((x,y)))
-
 """ Operations on DFAs
 """
 
@@ -231,40 +217,6 @@ def kbuild(m1,m2):
   qs2 = states(k2) # matrix indices are positions in this list
   return (k1, qs1, k2, qs2)
 
-def ks_exact(m, qs):
-  """ return exact initial-final distance s """
-  # initialize matrix
-  n = len(qs)
-  mx = zeros((n,n,2))
-  for i in range(n):
-    for j in range(n):
-      wijs = [wij for
-              ((qi,_),(qj,wij)) in m[2].items()
-              if qs[i] == qi and qs[j] == qj]
-      sum = ksum(wijs)
-      mx[i][j] = sum
-  if VERBOSE:
-    if n<20: print('states =', qs)
-    print('Calculating exact distances...')
-    print('initialized matrix of %d weights' % (n*n))
-    if n < 20: kshowMx(mx)
-  # now update all distances, in place
-  if VERBOSE: print('updating in place...')
-  for k in range(n):
-    for i in range(n):
-      for j in range(n):
-        mx[i][j] = kplus(mx[i][j],
-                          ktimes(mx[i][k],
-                            ktimes(kstar(mx[k][k]),
-                                 mx[k][j])))
-  # collect initial, final distance
-  i,f = (qs.index(m[0]), qs.index(list(m[1].keys())[0]))
-  if VERBOSE:
-    if n < 20: kshowMx(mx)
-    print('Since initial=%d final=%d' % (i,f))
-    print('distance s = mx[%d][%d] = %f,%f\n' % (i,f,mx[i][f][0],mx[i][f][1]))
-  return mx[i][f][1]
-
 def ks_approx(m, qs, e):
   """ approximate distance s to final state, up to epsilon e """
   # initialize vectors for m
@@ -309,17 +261,6 @@ def ks_approx(m, qs, e):
     print('distance s = d[%d] = %f,%f\n' % (final,d[final][0],d[final][1]))
   return d[final][1]
 
-def kl(m1, m2):
-  """ exact relative entropy of SDFAs m1 and m2 """
-  (k1,qs1,k2,qs2) = kbuild(m1,m2)
-  if VERBOSE: print('calculate exact distances in k1...')
-  s1 = ks_exact(k1, qs1) 
-  if VERBOSE: print('calculate exact distances in k2...')
-  s2 = ks_exact(k2, qs2) 
-  change = s1-s2
-  if VERBOSE: print('s1 - s2 = %f bits\n' % change)
-  return change
-
 def klx(m1, m2, e):
   """ approximate relative entropy of SDFAs m1,m2 """
   (k1,qs1,k2,qs2) = kbuild(m1,m2)
@@ -359,36 +300,12 @@ def kshowMx(mx):
 """ EXAMPLES
 """
 
-def firstTest():
-  """ compute kl of Mohri's Figure 1 with cycle probabilities p1, p2 """
-  p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
-  m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
-  m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
-  print(kl(m1,m2))
-
 def firstApprox():
   """ compute klx of Mohri's Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
   m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
   print(klx(m1,m2,E))
-
-def cycleTest():
-  """ plot kl for pairs of Mohri's Fig 1 with various cycle probabilities """
-  p1s = [0.2, 0.3, 0.4, 0.48, 0.6, 0.7, 0.8, 0.9]
-  kls = []
-  for x in p1s:
-    p1,p2 = x, 0.5
-    m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
-    m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
-    diff = kl(m1,m2)
-    print('kl(fig1(%.2f),fig1(%.2f)) = %f' % (p1,p2,diff))
-    kls.append(diff)
-  plt.xlabel("p2")
-  plt.ylabel("kl")
-  plt.plot(p1s, kls, 'r')
-  plt.title("kl(fig1 with p(cycle)=%.2f, fig1 with 0<p(cycle)<1)" % p1)
-  plt.show()
 
 def cycleApprox():
   """ plot klx for pairs of Mohri's Fig 1 with various cycle probabilities """
@@ -407,14 +324,6 @@ def cycleApprox():
   plt.title("klx(fig1(%.2f), fig1(p), %.2f), for 0<p(cycle)<1" % (p1,E))
   plt.show()
 
-def yuExample():
-  """ compare the slightly bigger machines from Yu&al'25 """
-  print('--- m1 = the acceptor corresponding to tIDS')
-  m1 = mIDS
-  print('--- m2 = the acceptor corresponding to tADS')
-  m2 = mADS
-  print(kl(m1,m2))
-
 def yuApprox():
   """ compare the slightly bigger machines from Yu&al'25 """
   print('--- m1 = the acceptor corresponding to tIDS')
@@ -425,9 +334,6 @@ def yuApprox():
 
 if __name__ == '__main__':
   if not(VERBOSE): print('To see calculations, edit this file to set VERBOSE = True')
-  firstTest()
-  #cycleTest()
-  #yuExample()
-  #firstApprox()
+  firstApprox()
   #cycleApprox()
   #yuApprox()
