@@ -67,7 +67,7 @@ and so the algorithm defined here will throw an exception.
 from numpy import log2, zeros, array
 from itertools import product # cartesian product of lists
 from collections import deque # to implement queue
-from SDFA_display import * # optional, for graphical displays
+from SDFA_display import dotDFA # optional, for graphical displays
 from SDFA_YuExamples import mIDS, mADS
 
 E = 0.0001 # default epsilon for testing klx
