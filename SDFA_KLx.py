@@ -264,7 +264,8 @@ def ks_approx(m, qs, e):
 def klx(m1, m2, e):
   """ approximate relative entropy of SDFAs m1,m2 """
   (k1,qs1,k2,qs2) = kbuild(m1,m2)
-  if len(qs1) < 40: dotKDFA(k1,qs1)
+  #if len(qs1) < 40: dotPDFA(m1,states(m1))
+  #if len(qs1) < 40: dotKDFA(k1,qs1)
   if VERBOSE: print('calculate approx distances in k1...')
   s1 = ks_approx(k1, qs1, e)
   if VERBOSE: print('calculate approx distances in k2...')
@@ -318,10 +319,22 @@ def cycleApprox():
     diff = klx(m1,m2,E)
     print('klx(fig1(%.2f),fig1(%.2f),%.2f) = %f' % (p1,p2,E,diff))
     kls.append(diff)
+  kls2 = []
+  for x in p1s:
+    p1,p2 = 0.5, x
+    m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
+    m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
+    diff = klx(m1,m2,E)
+    print('klx(fig1(%.2f),fig1(%.2f),%.2f) = %f' % (p1,p2,E,diff))
+    kls2.append(diff)
   plt.xlabel("probability p")
   plt.ylabel("approx kl in bits")
-  plt.plot(p1s, kls, 'r')
-  plt.title("klx(fig1(%.2f), fig1(p), %.2f), for 0<p(cycle)<1" % (p1,E))
+  #plt.plot(p1s, kls, 'r')
+  #plt.plot(p1s, kls2, 'g')
+  plt.plot(p1s, kls, 'r', label="klx(fig1(%.2f), fig1(p), %.2f) for 0<p<1" % (p1,E))
+  plt.plot(p1s, kls2, 'g', label="klx(fig1(p), fig1(%.2f), %.2f) for 0<p<1" % (p1,E))
+  plt.legend()
+  plt.title("varying the difference in loop probabilities in Mohri's Fig 1")
   plt.show()
 
 def yuApprox():
@@ -334,6 +347,6 @@ def yuApprox():
 
 if __name__ == '__main__':
   if not(VERBOSE): print('To see calculations, edit this file to set VERBOSE = True')
-  firstApprox()
-  #cycleApprox()
+  #firstApprox()
+  cycleApprox()
   #yuApprox()
