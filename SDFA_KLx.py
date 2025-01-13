@@ -1,4 +1,4 @@
-"""SDFA_KLx.py
+""" SDFA_KLx.py
 
 implementing the approximate KL algorithm for stochastic
 deterministic finite acceptors (SDFAs), from Cortes&al'08, Mohri'02.
@@ -64,10 +64,10 @@ a positive probability, the relative entropy of m1,m2 is infinite,
 and so the algorithm defined here will throw an exception.
 
 """
-from numpy import log2, zeros, array
+from numpy import log2, zeros, array, ndarray
 from itertools import product # cartesian product of lists
 from collections import deque # to implement queue
-from SDFA_display import dotDFA # optional, for graphical displays
+from SDFA_display import * # optional, for graphical displays
 from SDFA_YuExamples import mIDS, mADS
 
 E = 0.0001 # default epsilon for testing klx
@@ -280,7 +280,7 @@ def klx(m1, m2, e):
 
 def printTransition(t):
   ((qi,ii),(qf,w)) = t
-  if isinstance(w,tuple) and len(w) == 2:
+  if (isinstance(w,tuple) or isinstance(w,ndarray)) and len(w) == 2:
     print('   (%s,%s) -> (%s,(%s,%s))' % (qi,ii,qf,'%.2f' % w[0],'%.2f' % w[1]))
   elif isinstance(w,float):
     print('   (%s,%s) -> (%s,%s)' % (qi,ii,qf,'%.2f' % w))
@@ -306,6 +306,7 @@ def firstApprox():
   """ compute klx of Mohri's Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
+  printDFA(m1)
   dotDFA(m1,states(m1))
   m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
   #dotDFA(m2,states(m2))
