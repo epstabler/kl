@@ -205,10 +205,12 @@ def kbuild(m1,m2):
   if VERBOSE:
     print('\n--- k1 = complete(kintersect( phi1(m1), phi2(logDFA(m1)) ) )')
   k1a = phi1(finalize(m1))
+  #dotDFA(k1a,states(k1a))
   k1b = phi2(logDFA(finalize(m1)))
   k1 = kintersect(k1a,k1b)
   kcomplete(k1)
   qs1 = states(k1) # matrix indices are positions in this list
+  #dotDFA(k1,qs1)
   if VERBOSE:
     print('--- k2 = complete(kintersect( phi1(m1), phi2(logDFA(m2)) ) )\n')
   k2b = phi2(logDFA(finalize(m2)))
@@ -264,7 +266,7 @@ def ks_approx(m, qs, e):
 def klx(m1, m2, e):
   """ approximate relative entropy of SDFAs m1,m2 """
   (k1,qs1,k2,qs2) = kbuild(m1,m2)
-  #if len(qs1) < 40: dotKDFA(k1,qs1)
+  #if len(qs1) < 40: dotDFA(k1,qs1)
   if VERBOSE: print('calculate approx distances in k1...')
   s1 = ks_approx(k1, qs1, e)
   if VERBOSE: print('calculate approx distances in k2...')
@@ -304,9 +306,9 @@ def firstApprox():
   """ compute klx of Mohri's Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
-  dotPDFA(m1,states(m1))
+  dotDFA(m1,states(m1))
   m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
-  #dotPDFA(m2,states(m2))
+  #dotDFA(m2,states(m2))
   print(klx(m1,m2,E))
 
 def cycleApprox():
