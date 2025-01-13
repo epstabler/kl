@@ -236,7 +236,7 @@ def ks_approx(m, qs, e):
   if VERBOSE:
     if n < 40: print('states =',qs)
     print('initial,final state indices =',(initial,final))
-    print('initialized vectors d and r identical with %d weights' % n)
+    print('initialized vectors d and r identically with %d weights' % n)
     if n < 20: kshowMx([d])
   # update vectors with distances, in place
   if VERBOSE: print('updating in place, up to epsilon = %.2f...' % e)
