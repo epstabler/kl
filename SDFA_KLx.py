@@ -264,7 +264,6 @@ def ks_approx(m, qs, e):
 def klx(m1, m2, e):
   """ approximate relative entropy of SDFAs m1,m2 """
   (k1,qs1,k2,qs2) = kbuild(m1,m2)
-  #if len(qs1) < 40: dotPDFA(m1,states(m1))
   #if len(qs1) < 40: dotKDFA(k1,qs1)
   if VERBOSE: print('calculate approx distances in k1...')
   s1 = ks_approx(k1, qs1, e)
@@ -305,7 +304,9 @@ def firstApprox():
   """ compute klx of Mohri's Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
+  dotPDFA(m1,states(m1))
   m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
+  #dotPDFA(m2,states(m2))
   print(klx(m1,m2,E))
 
 def cycleApprox():
@@ -345,6 +346,6 @@ def yuApprox():
 
 if __name__ == '__main__':
   if not(VERBOSE): print('To see calculations, edit this file to set VERBOSE = True')
-  #firstApprox()
-  cycleApprox()
+  firstApprox()
+  #cycleApprox()
   #yuApprox()
