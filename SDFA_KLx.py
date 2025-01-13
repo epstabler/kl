@@ -3,7 +3,7 @@
 implementing the approximate KL algorithm for stochastic
 deterministic finite acceptors (SDFAs), from Cortes&al'08, Mohri'02.
 
-Given SDFAs m1 and m2, klx(m1,m2) returns their relative entropy,
+Given SDFAs m1 and m2, klx(m1,m2,e) returns their relative entropy,
 sometimes called Kullback-Liebler (KL) divergence, up to a
 user set error threshold epsilon
 
