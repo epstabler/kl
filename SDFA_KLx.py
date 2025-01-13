@@ -329,8 +329,6 @@ def cycleApprox():
     kls2.append(diff)
   plt.xlabel("probability p")
   plt.ylabel("approx kl in bits")
-  #plt.plot(p1s, kls, 'r')
-  #plt.plot(p1s, kls2, 'g')
   plt.plot(p1s, kls, 'r', label="klx(fig1(%.2f), fig1(p), %.2f) for 0<p<1" % (p1,E))
   plt.plot(p1s, kls2, 'g', label="klx(fig1(p), fig1(%.2f), %.2f) for 0<p<1" % (p1,E))
   plt.legend()
