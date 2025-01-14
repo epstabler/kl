@@ -52,7 +52,7 @@ def newName(q,i):
   else: raise runtimeError("name clash: unexpected state of machine 2")
 
 def dot2DFA(m1, qs1, m2, qs2):
-  """ display two DFAs """
+  """ display two (small) DFAs """
   # rename states in m2 with simple strategy (error if there are clashes)
   m2increment = len(qs1)
   print('qs2 =',qs2)
