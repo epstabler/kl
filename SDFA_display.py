@@ -62,7 +62,8 @@ def dot2DFA(m1, qs1, m2, qs2):
   qs12 = qs1 + newqs2
   m20 = newName(m2[0],m2increment)
   m21 = dict([(newName(f,m2increment),w) for (f,w) in m2[1].items()])
-  m22 = dict([((newName(qi,m2increment),ii),(newName(qf,m2increment),w)) for ((qi,ii),(qf,w)) in m2[2].items()])
+  m22 = dict([((newName(qi,m2increment),ii),(newName(qf,m2increment),w))
+              for ((qi,ii),(qf,w)) in m2[2].items()])
   # write graph to file
   dotfile = ''
   dotfile += 'digraph m12 {\n'
