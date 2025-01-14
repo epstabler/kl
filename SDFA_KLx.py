@@ -1,4 +1,4 @@
-""" SDFA_KLx.py
+"""SDFA_KLx.py
 
 implementing the approximate KL algorithm for stochastic
 deterministic finite acceptors (SDFAs), from Cortes&al'08, Mohri'02.
@@ -58,10 +58,10 @@ Additional requirements:
     final weight should sum to one
   * any cycle should have probability strictly less than one
   * the two input SDFAs m1 and m2 should have the same alphabet.
-
-In fact, if there is a string that only one of the input SDFAs maps to
-a positive probability, the relative entropy of m1,m2 is infinite,
-and so the algorithm defined here will throw an exception.
+    In fact, if there is a string that only one of the input SDFAs
+    maps to a positive probability, the relative entropy of m1,m2 is
+    infinite, and so the algorithm defined here will throw an
+    exception.
 
 """
 from numpy import log2, zeros, array, ndarray
