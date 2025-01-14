@@ -55,7 +55,7 @@ entropic weights and the DFAs that use them.
 Additional requirements:
   * probabilities in the input SDFA should be normalized -- i.e., for
     every state, the sum of the probabilities of outgoing arcs and
-    final weight should sum to one (cf Cortes&al \S2.4 and Lemma 7)
+    final weight should sum to one
   * any cycle should have probability strictly less than one
   * the two input SDFAs m1 and m2 should have the same alphabet.
 
