@@ -42,31 +42,32 @@ def dotDFA(m, qs):
   s = Source(dotfile, filename="/tmp/dfa", format="png")
   s.view()
 
-def new(q,i):
-  """ to show a second machine in same display, rename the states of m2.
+def newName(q,i):
+  """ to show a second machine in same display, rename the states of m2 --
+       for comparisons of small machines differing only in weights
   """
   if isinstance(q,int): return i+q  # we add len(qs1) to positions in qs2 """
   elif isinstance(q,str): return 2*q
-  elif isinstance(q,tuple) and len(q)==2: return (new(q[0]),new(q[1]))
-  else: raise runtimeError("new: unexpected state of machine 2")
+  elif isinstance(q,tuple) and len(q)==2: return (newName(q[0]),newName(q[1]))
+  else: raise runtimeError("name clash: unexpected state of machine 2")
 
 def dot2DFA(m1, qs1, m2, qs2):
   """ display two DFAs """
   # rename states in m2 with simple strategy (error if there are clashes)
   m2increment = len(qs1)
   print('qs2 =',qs2)
-  newqs2 = [new(q,m2increment) for q in qs2]
+  newqs2 = [newName(q,m2increment) for q in qs2]
   print('newqs2 =',newqs2)
   if [x for x in qs1 if x in newqs2]: raise RuntimeError('State name clash')
   qs12 = qs1 + newqs2
-  m20 = new(m2[0],m2increment)
-  m21 = dict([(new(f,m2increment),w) for (f,w) in m2[1].items()])
-  m22 = dict([((new(qi,m2increment),ii),(new(qf,m2increment),w)) for ((qi,ii),(qf,w)) in m2[2].items()])
+  m20 = newName(m2[0],m2increment)
+  m21 = dict([(newName(f,m2increment),w) for (f,w) in m2[1].items()])
+  m22 = dict([((newName(qi,m2increment),ii),(newName(qf,m2increment),w)) for ((qi,ii),(qf,w)) in m2[2].items()])
   # write graph to file
   dotfile = ''
   dotfile += 'digraph m12 {\n'
   dotfile += 'rankdir = LR;\n'
-    # initial states with bold circle, all states numbered by positions in qs1,qs2
+  # initial states with bold circle
   initialStates = [m1[0], m20]
   initialStateString = ' '.join([str(qs12.index(k)) for k in initialStates])
   dotfile += 'node [shape=circle,style=bold] %s;\n' % initialStateString
