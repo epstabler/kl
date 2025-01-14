@@ -303,7 +303,7 @@ def kshowMx(mx):
 """
 
 def firstApprox():
-  """ compute klx of Mohri's Figure 1 with cycle probabilities p1, p2 """
+  """ compute klx of Mohri'02 Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
   printDFA(m1)
@@ -314,7 +314,7 @@ def firstApprox():
   print(klx(m1,m2,E))
 
 def cycleApprox():
-  """ plot klx for pairs of Mohri's Fig 1 with various cycle probabilities """
+  """ plot klx for pairs of Mohri'02 Fig 1 with various cycle probabilities """
   p1s = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
   kls = []
   for x in p1s:
@@ -337,7 +337,7 @@ def cycleApprox():
   plt.plot(p1s, kls, 'r', label="klx(fig1(%.2f), fig1(p), %.4f) for 0<p<1" % (p1,E))
   plt.plot(p1s, kls2, 'g', label="klx(fig1(p), fig1(%.2f), %.4f) for 0<p<1" % (p1,E))
   plt.legend()
-  plt.title("varying the difference in loop probabilities in Mohri's Fig 1")
+  plt.title("varying the difference in loop probabilities in Mohri'02 Fig 1")
   plt.show()
 
 def yuApprox():
