@@ -306,7 +306,7 @@ def firstApprox():
   """ compute klx of Mohri'02 Figure 1 with cycle probabilities p1, p2 """
   p1,p2 = 0.9,0.1 # when p1,p2 = 0.9,0.1, these are examples fig1a,fig1b above
   m1 = (0, {1:p1}, { (0,'a'):(1,1.), (1,'b'):(1,1-p1) })
-  printDFA(m1)
+  #printDFA(m1)
   #dotDFA(m1,states(m1))
   m2 = (0, {1:p2}, { (0,'a'):(1,1.), (1,'b'):(1,1-p2) })
   #dotDFA(m2,states(m2))

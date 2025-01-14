@@ -55,9 +55,7 @@ def dot2DFA(m1, qs1, m2, qs2):
   """ display two (small) DFAs """
   # rename states in m2 with simple strategy (error if there are clashes)
   m2increment = len(qs1)
-  print('qs2 =',qs2)
   newqs2 = [newName(q,m2increment) for q in qs2]
-  print('newqs2 =',newqs2)
   if [x for x in qs1 if x in newqs2]: raise RuntimeError('State name clash')
   qs12 = qs1 + newqs2
   m20 = newName(m2[0],m2increment)
