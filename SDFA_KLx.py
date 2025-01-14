@@ -4,8 +4,8 @@ implementing the approximate KL algorithm for stochastic
 deterministic finite acceptors (SDFAs), from Cortes&al'08, Mohri'02.
 
 Given SDFAs m1 and m2, klx(m1,m2,e) returns their relative entropy,
-sometimes called Kullback-Liebler (KL) divergence, up to a
-user set error threshold epsilon
+sometimes called Kullback-Liebler (KL) divergence, up to
+error threshold epsilon e.
 
 To run a simple example, type:
   > python SDFA_KLx.py
@@ -18,9 +18,9 @@ of floating point numbers representing (probability,entropy).
 K also includes +infty,-infty, but here we just let infinite values
 raise exceptions.  The semiring zero is (0.,0.), and one is (1.,0.).
 
-The approximate algorithm uses Bellman-Ford breadth-first queue
+This approximate algorithm uses Bellman-Ford breadth-first queue
 updating to a threshold epsilon. Here Python deques implement queues:
-enqueue e with appendleft(e) and dequeue e from the right with pop().
+enqueue e with appendleft(e) and dequeue from the right with pop().
 
 Cortes&al 2008.   https://cs.nyu.edu/~mohri/pub/nkl.pdf
                   https://doi.org/10.1142/s0129054108005644
@@ -37,7 +37,7 @@ Each weighted DFA is represented by a 3-tuple:
   {(SourceState,Symbol) -> (TargetState,Weight)} )
 
 where states and symbols are strings, and weights are
-    sometimes probabilities p (i.e. floats 0<=p<=1),
+    sometimes probabilities (i.e. floats 0<=p<=1),
     sometimes log2(probabilities) (i.e. floats),
     sometimes entropic weights (i.e. pairs of floats)
 
@@ -52,7 +52,7 @@ acceptors, but here we treat the slightly simpler class of DFAs.
 Functions with names beginning with 'k' are defined specifically for
 entropic weights and the DFAs that use them.
 
-Additional equirements:
+Additional requirements:
   * probabilities in the input SDFA should be normalized -- i.e., for
     every state, the sum of the probabilities of outgoing arcs and
     final weight should sum to one (cf Cortes&al \S2.4 and Lemma 7)
@@ -145,7 +145,7 @@ def ktimes(w1,w2):
 
 def kcomplete(m):
   """ complete the transitions of entropic m *in place*
-      by adding transitions to a new sink state 'x' if necessary.
+      by adding transitions to a new sink state 'x' if necessary
   """
   qs = states(m)
   v = vocabulary(m)
@@ -164,12 +164,12 @@ def logDFA(m):
   """ return DFA like m but with log2(probability) weights """
   finals = {}
   for q in m[1].keys():
-    if m[1][q] == 0.: finals[q] = 0
+    if m[1][q] == 0.: finals[q] = 0.
     else: finals[q] = log2(m[1][q])
   transitions = {}
   for si in m[2].keys():
-    if m[2][si][1] == 0:
-      transitions[si] = (m[2][si][0],0)
+    if m[2][si][1] == 0.:
+      transitions[si] = (m[2][si][0],0.)
     else:
       transitions[si] = (m[2][si][0],log2(m[2][si][1]))
   return (m[0], finals, transitions)
@@ -241,7 +241,7 @@ def ks_approx(m, qs, e):
     print('initialized vectors d and r identically with %d weights' % n)
     if n < 20: kshowMx([d])
   # update vectors with distances, in place
-  if VERBOSE: print('updating in place, up to epsilon = %.2f...' % e)
+  if VERBOSE: print('updating in place, up to epsilon %.2f...' % e)
   s = deque([initial]) # to start: initial state in queue
   iteration = 0
   while s:
@@ -258,7 +258,7 @@ def ks_approx(m, qs, e):
         if not(f in s): s.appendleft(f)
     iteration += 1
   if VERBOSE:
-    print('%d iterations up to epsilon < %f' % (iteration,e))
+    print('%d iterations up to epsilon %f' % (iteration,e))
     if n < 20: kshowMx([d])
     print('distance s = d[%d] = %f,%f\n' % (final,d[final][0],d[final][1]))
   return d[final][1]
