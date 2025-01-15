@@ -326,6 +326,7 @@ def cycleApprox():
     diff = klx(m1,m2,E)
     print('klx(fig1(%.2f),fig1(%.2f),%.2f) = %f' % (p1,p2,E,diff))
     kls2.append(diff)
+  # matplotlib plt is imported from SDFA_display
   plt.xlabel("probability p")
   plt.ylabel("approx kl in bits")
   plt.plot(p1s, kls, 'r', label="klx(fig1(%.2f), fig1(p), %.4f) for 0<p<1" % (p1,E))
