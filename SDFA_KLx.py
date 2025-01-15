@@ -23,7 +23,7 @@ updating to a threshold epsilon. Here Python deques implement queues:
 enqueue e with appendleft(e) and dequeue from the right with pop().
 
 As Allauzen&al note, an optimized version of this computation
-can be implemented in openfst.
+can be implemented in openfst, and cf Gorman&Sproat on pynini.
 
 Cortes&al 2008.     https://cs.nyu.edu/~mohri/pub/nkl.pdf
                     https://doi.org/10.1142/s0129054108005644
