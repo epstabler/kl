@@ -128,12 +128,6 @@ def kplus(w1,w2):
   (x2,y2) = w2
   return ( x1+x2, y1+y2 )
 
-def ksum(xs):
-  """ extend kplus to list """
-  sum = (0.,0.)
-  for x in xs: sum = kplus(sum,x)
-  return sum
-
 def ktimes(w1,w2):
   """ entropy weight product """
   (x1,y1) = w1
