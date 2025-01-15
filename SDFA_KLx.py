@@ -258,7 +258,7 @@ def ks_approx(m, qs, e):
   return d[final][1]
 
 def klx(m1, m2, e):
-  """ approximate relative entropy of SDFAs m1,m2 """
+  """ approximate relative entropy of SDFAs m1,m2 up to error e """
   (k1,qs1,k2,qs2) = kbuild(m1,m2)
   #if len(qs1) < 40: dotDFA(k1,qs1)
   if VERBOSE: print('calculate approx distances in k1...')
