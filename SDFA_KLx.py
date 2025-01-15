@@ -22,11 +22,16 @@ This approximate algorithm uses Bellman-Ford breadth-first queue
 updating to a threshold epsilon. Here Python deques implement queues:
 enqueue e with appendleft(e) and dequeue from the right with pop().
 
-Cortes&al 2008.   https://cs.nyu.edu/~mohri/pub/nkl.pdf
-                  https://doi.org/10.1142/s0129054108005644
-Mohri 2002.       https://cs.nyu.edu/~mohri/pub/jalc.pdf
-                  https://doi.org/10.25596/jalc-2002-321
-Allauzen&al 2007. https://doi.org/10.1007/978-3-540-76336-9_3
+As Allauzen&al note, an optimized version of this computation
+can be implemented in openfst.
+
+Cortes&al 2008.     https://cs.nyu.edu/~mohri/pub/nkl.pdf
+                    https://doi.org/10.1142/s0129054108005644
+Mohri 2002.         https://cs.nyu.edu/~mohri/pub/jalc.pdf
+                    https://doi.org/10.25596/jalc-2002-321
+
+Allauzen&al 2007.   https://doi.org/10.1007/978-3-540-76336-9_3
+Gorman&Sproat 2021. https://doi.org/10.1007/978-3-031-02179-4 
 
 ############
 
