@@ -133,6 +133,18 @@ def logDFA(m):
       transitions[si] = (m[2][si][0],log2(m[2][si][1]))
   return (m[0], finals, transitions)
 
+def phi1(m):
+  """ return k-DFA like m but with entropic weights (w,0.) """
+  return( (m[0],
+    dict([(q, (m[1][q],0.)) for q in m[1].keys()]),
+    dict([(si, (m[2][si][0], (m[2][si][1],0.))) for si in m[2].keys()]) ) )
+
+def phi2(m):
+  """ return k-DFA like m but with entropic weights (1.,w) """
+  return( (m[0],
+    dict([(q, (1.,m[1][q])) for q in m[1].keys()]),
+    dict([(si, (m[2][si][0], (1.,m[2][si][1]))) for si in m[2].keys()]) ) )
+
 """ Operations on the entropy semiring
 """
 
@@ -168,18 +180,6 @@ def kcomplete(m):
     for a in v:
         m[2][('x',a)] = ('x',(0.,0.))
 
-def kphi1(m):
-  """ return DFA like m but with entropic weights (w,0.) """
-  return( (m[0],
-    dict([(q, (m[1][q],0.)) for q in m[1].keys()]),
-    dict([(si, (m[2][si][0], (m[2][si][1],0.))) for si in m[2].keys()]) ) )
-
-def kphi2(m):
-  """ return DFA like m but with entropic weights (1.,w) """
-  return( (m[0],
-    dict([(q, (1.,m[1][q])) for q in m[1].keys()]),
-    dict([(si, (m[2][si][0], (1.,m[2][si][1]))) for si in m[2].keys()]) ) )
-
 def kintersect(k1,k2):
   """ return intersection of entropic DFAs k1, k2 """
   init = (k1[0], k2[0])
@@ -197,17 +197,17 @@ def kintersect(k1,k2):
 def kbuild(m1,m2):
   """ return the entropic intersection machines and their states """
   if VERBOSE:
-    print('\n--- k1 = kcomplete(kintersect( kphi1(m1), kphi2(logDFA(m1)) ) )')
-  k1a = kphi1(finalize(m1))
+    print('\n--- k1 = kcomplete(kintersect( phi1(m1), phi2(logDFA(m1)) ) )')
+  k1a = phi1(finalize(m1))
   #dotDFA(k1a,states(k1a))
-  k1b = kphi2(logDFA(finalize(m1)))
+  k1b = phi2(logDFA(finalize(m1)))
   k1 = kintersect(k1a,k1b)
   kcomplete(k1)
   qs1 = states(k1) # matrix indices are positions in this list
   #dotDFA(k1,qs1)
   if VERBOSE:
-    print('--- k2 = kcomplete(kintersect( kphi1(m1), kphi2(logDFA(m2)) ) )\n')
-  k2b = kphi2(logDFA(finalize(m2)))
+    print('--- k2 = kcomplete(kintersect( phi1(m1), phi2(logDFA(m2)) ) )\n')
+  k2b = phi2(logDFA(finalize(m2)))
   k2 = kintersect(k1a,k2b)
   kcomplete(k2)
   qs2 = states(k2) # matrix indices are positions in this list
