@@ -195,7 +195,7 @@ def kintersect(k1,k2):
   return ( (init, finals, transitions ) )
 
 def kbuild(m1,m2):
-  """ return the entropic intersection machines and their states """
+  """ return Cortes&al entropic intersection machines and their states """
   if VERBOSE:
     print('\n--- k1 = kcomplete(kintersect( phi1(m1), phi2(logDFA(m1)) ) )')
   k1a = phi1(finalize(m1))
